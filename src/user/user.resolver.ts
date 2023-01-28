@@ -5,7 +5,8 @@ import { UserCreate } from '@/user/create/types';
 import { UserDeleteService } from '@/user/delete/service';
 import { UserGetInput } from '@/user/dto/user.get.input';
 import { UserOutput } from '@/user/dto/user.get.output';
-import { UserUpdateInput } from '@/user/dto/user.update.input';
+import { UserUpdateService } from '@/user/update/service';
+import { UserUpdate } from '@/user/update/types';
 import { UserService } from '@/user/user.service';
 import { IUserResolver } from '@/user/user.types';
 
@@ -14,6 +15,7 @@ export class UserResolver implements IUserResolver {
   constructor(
     private userService: UserService,
     private createService: UserCreateService,
+    private updateService: UserUpdateService,
     private deleteService: UserDeleteService
   ) {}
 
@@ -33,8 +35,8 @@ export class UserResolver implements IUserResolver {
   }
 
   @Mutation(() => UserOutput)
-  async update(@Args('data') data: UserUpdateInput): Promise<UserOutput> {
-    return await this.userService.update(data);
+  async update(@Args('data') data: UserUpdate.Input): Promise<UserOutput> {
+    return await this.updateService.update(data);
   }
 
   @Mutation(() => Boolean)
