@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/prisma.service';
-import { UserCreateInput } from '@/user/dto/user.create.input';
 import { UserGetInput } from '@/user/dto/user.get.input';
 import { UserOutput } from '@/user/dto/user.get.output';
 import { UserUpdateInput } from '@/user/dto/user.update.input';
@@ -25,20 +24,6 @@ export class UserService implements IUserService {
     const exists = await this.prisma.user.findFirst({ where: { email } });
 
     return !!exists;
-  }
-
-  async create(data: UserCreateInput): Promise<UserOutput> {
-    const conflict = await this.verifyConflict(data.email);
-
-    if (conflict) throw new EmailConflictError();
-
-    const user = await this.prisma.user.create({ data });
-
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    };
   }
 
   async getAll(): Promise<UserOutput[]> {
