@@ -2,19 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from '@/prisma.service';
 import { UserDelete } from '@/user/delete/types';
-import { UserGetInput } from '@/user/dto/user.get.input';
+import { UserRead } from '@/user/read/types';
 
 @Injectable()
 export class UserDeleteService implements UserDelete.Service {
   constructor(private prisma: PrismaService) {}
 
-  async checkExists(where: UserGetInput): Promise<boolean> {
+  async checkExists(where: UserRead.Input): Promise<boolean> {
     const exists = await this.prisma.user.findFirst({ where });
 
     return !!exists;
   }
 
-  async delete(where: UserGetInput): Promise<boolean> {
+  async delete(where: UserRead.Input): Promise<boolean> {
     const exists = await this.checkExists(where);
 
     if (!exists) {

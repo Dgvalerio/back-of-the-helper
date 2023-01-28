@@ -1,20 +1,11 @@
 import { UserCreate } from '@/user/create/types';
-import { UserGetInput } from '@/user/dto/user.get.input';
-import { UserOutput } from '@/user/dto/user.get.output';
+import { UserRead } from '@/user/read/types';
 import { UserUpdate } from '@/user/update/types';
-import { User } from '@prisma/client';
 
 export interface IUserResolver {
-  create(data: UserCreate.Input): Promise<UserOutput>;
-  getAll(): Promise<UserOutput[]>;
-  getOne(data: UserGetInput): Promise<UserOutput>;
-  update(data: UserUpdate.Input): Promise<UserOutput>;
-  delete(data: UserGetInput): Promise<boolean>;
-}
-
-export interface IUserService {
-  getAll(): Promise<UserOutput[]>;
-  getOne(data: UserGetInput): Promise<UserOutput>;
-  verifyConflict(email: User['email']): Promise<boolean>;
-  adapter(user: User): UserOutput;
+  create(data: UserCreate.Input): Promise<UserRead.Output>;
+  getAll(): Promise<UserRead.Output[]>;
+  getOne(data: UserRead.Input): Promise<UserRead.Output>;
+  update(data: UserUpdate.Input): Promise<UserRead.Output>;
+  delete(data: UserRead.Input): Promise<boolean>;
 }

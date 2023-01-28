@@ -1,6 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 
-import { UserOutput } from '@/user/dto/user.get.output';
+import { UserRead } from '@/user/read/types';
 import { User } from '@prisma/client';
 
 import {
@@ -13,9 +13,9 @@ import {
 
 export namespace UserUpdate {
   export interface Service {
-    update(data: Input): Promise<UserOutput>;
+    update(data: Input): Promise<UserRead.Output>;
     verifyConflict(email: User['email']): Promise<boolean>;
-    adapter(user: User): UserOutput;
+    adapter(user: User): UserRead.Output;
   }
 
   @InputType('UserUpdateInput')

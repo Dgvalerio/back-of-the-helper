@@ -1,15 +1,15 @@
 import { InputType } from '@nestjs/graphql';
 
-import { UserOutput } from '@/user/dto/user.get.output';
+import { UserRead } from '@/user/read/types';
 import { User } from '@prisma/client';
 
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export namespace UserCreate {
   export interface Service {
-    create(data: Input): Promise<UserOutput>;
+    create(data: Input): Promise<UserRead.Output>;
     verifyConflict(email: User['email']): Promise<boolean>;
-    adapter(user: User): UserOutput;
+    adapter(user: User): UserRead.Output;
   }
 
   @InputType('UserCreateInput')

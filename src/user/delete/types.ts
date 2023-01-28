@@ -1,8 +1,8 @@
-import { UserGetInput } from '@/user/dto/user.get.input';
+import { UserRead } from '@/user/read/types';
 
 export namespace UserDelete {
   export interface Service {
-    checkExists(data: UserGetInput): Promise<boolean>;
-    delete(data: UserGetInput): Promise<boolean>;
+    checkExists(data: UserRead.Input): Promise<boolean>;
+    delete(data: UserRead.Input): Promise<boolean>;
   }
 }

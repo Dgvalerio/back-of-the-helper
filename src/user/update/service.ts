@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/prisma.service';
-import { UserOutput } from '@/user/dto/user.get.output';
 import { EmailConflictError } from '@/user/errors/email-conflict.error';
+import { UserRead } from '@/user/read/types';
 import { UserUpdate } from '@/user/update/types';
 import { User } from '@prisma/client';
 
@@ -10,7 +10,7 @@ import { User } from '@prisma/client';
 export class UserUpdateService implements UserUpdate.Service {
   constructor(private prisma: PrismaService) {}
 
-  adapter(user: User): UserOutput {
+  adapter(user: User): UserRead.Output {
     return {
       id: user.id,
       email: user.email,
@@ -24,7 +24,7 @@ export class UserUpdateService implements UserUpdate.Service {
     return !!exists;
   }
 
-  async update({ id, ...data }: UserUpdate.Input): Promise<UserOutput> {
+  async update({ id, ...data }: UserUpdate.Input): Promise<UserRead.Output> {
     if (Object.keys(data).length === 0) {
       throw new BadRequestException(
         'Nenhum parâmetro foi informado para atualização'
