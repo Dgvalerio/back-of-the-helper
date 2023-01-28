@@ -4,19 +4,11 @@ import { PrismaService } from '@/prisma.service';
 import { EmailConflictError } from '@/user/errors/email-conflict.error';
 import { UserRead } from '@/user/read/types';
 import { UserUpdate } from '@/user/update/types';
-import { User } from '@prisma/client';
+import { userAdapter } from '@/user/utils/adapter';
 
 @Injectable()
 export class UserUpdateService implements UserUpdate.Service {
   constructor(private prisma: PrismaService) {}
-
-  adapter(user: User): UserRead.Output {
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    };
-  }
 
   async verifyConflict(email: string): Promise<boolean> {
     const exists = await this.prisma.user.findFirst({ where: { email } });
@@ -39,6 +31,6 @@ export class UserUpdateService implements UserUpdate.Service {
 
     const user = await this.prisma.user.update({ where: { id }, data });
 
-    return this.adapter(user);
+    return userAdapter(user);
   }
 }

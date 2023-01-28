@@ -8,7 +8,6 @@ export namespace UserRead {
   export interface Service {
     getAll(): Promise<UserRead.Output[]>;
     getOne(data: UserRead.Input): Promise<UserRead.Output>;
-    adapter(user: User): UserRead.Output;
   }
 
   @InputType('UserGetInput')

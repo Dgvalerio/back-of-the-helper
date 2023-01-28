@@ -6,24 +6,16 @@ import {
 
 import { PrismaService } from '@/prisma.service';
 import { UserRead } from '@/user/read/types';
-import { User } from '@prisma/client';
+import { userAdapter } from '@/user/utils/adapter';
 
 @Injectable()
 export class UserReadService implements UserRead.Service {
   constructor(private prisma: PrismaService) {}
 
-  adapter(user: User): UserRead.Output {
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-    };
-  }
-
   async getAll(): Promise<UserRead.Output[]> {
     const user = await this.prisma.user.findMany();
 
-    return user.map(this.adapter);
+    return user.map(userAdapter);
   }
 
   async getOne(where: UserRead.Input): Promise<UserRead.Output> {
@@ -39,6 +31,6 @@ export class UserReadService implements UserRead.Service {
       throw new NotFoundException('Nenhum usuário foi encontrado');
     }
 
-    return this.adapter(user);
+    return userAdapter(user);
   }
 }

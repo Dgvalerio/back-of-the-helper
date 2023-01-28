@@ -9,7 +9,6 @@ export namespace UserCreate {
   export interface Service {
     create(data: Input): Promise<UserRead.Output>;
     verifyConflict(email: User['email']): Promise<boolean>;
-    adapter(user: User): UserRead.Output;
   }
 
   @InputType('UserCreateInput')
