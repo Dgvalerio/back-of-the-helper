@@ -5,6 +5,7 @@ import { UserCreate } from '@/user/create/types';
 import { EmailConflictError } from '@/user/errors/email-conflict.error';
 import { UserRead } from '@/user/read/types';
 import { userAdapter } from '@/user/utils/adapter';
+import { hashPasswordTransform } from '@/user/utils/crypto';
 
 @Injectable()
 export class UserCreateService implements UserCreate.Service {
@@ -21,7 +22,9 @@ export class UserCreateService implements UserCreate.Service {
 
     if (conflict) throw new EmailConflictError();
 
-    const user = await this.prisma.user.create({ data });
+    const user = await this.prisma.user.create({
+      data: { ...data, password: hashPasswordTransform.to(data.password) },
+    });
 
     return userAdapter(user);
   }

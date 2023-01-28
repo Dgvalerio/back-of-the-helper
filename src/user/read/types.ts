@@ -1,4 +1,4 @@
-import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
 
 import { User } from '@prisma/client';
 
@@ -33,5 +33,9 @@ export namespace UserRead {
 
     @Field()
     email: string;
+
+    @Field()
+    @HideField()
+    password: string;
   }
 }
