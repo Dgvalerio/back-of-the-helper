@@ -4,8 +4,12 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { UserRead } from '@/user/read/types';
 
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IncomingMessage } from 'http';
 
 export namespace UserAuth {
+  export interface Context {
+    req: IncomingMessage & { user: UserRead.Output };
+  }
   export interface Service {
     validate(data: Input): Promise<Output>;
     jwtToken(user: UserRead.Output): Promise<string>;
