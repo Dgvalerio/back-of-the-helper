@@ -1,4 +1,4 @@
-import { UserCreate } from '@/user/create/create.types';
+import { UserCreate } from '@/user/create/types';
 import { UserGetInput } from '@/user/dto/user.get.input';
 import { UserOutput } from '@/user/dto/user.get.output';
 import { UserUpdateInput } from '@/user/dto/user.update.input';

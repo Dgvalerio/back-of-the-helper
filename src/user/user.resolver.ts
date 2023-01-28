@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { UserCreateService } from '@/user/create/create.service';
-import { UserCreate } from '@/user/create/create.types';
+import { UserCreateService } from '@/user/create/service';
+import { UserCreate } from '@/user/create/types';
 import { UserDeleteService } from '@/user/delete/service';
 import { UserGetInput } from '@/user/dto/user.get.input';
 import { UserOutput } from '@/user/dto/user.get.output';

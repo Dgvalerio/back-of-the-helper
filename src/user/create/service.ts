@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/prisma.service';
-import { UserCreate } from '@/user/create/create.types';
+import { UserCreate } from '@/user/create/types';
 import { UserOutput } from '@/user/dto/user.get.output';
 import { EmailConflictError } from '@/user/errors/email-conflict.error';
 import { User } from '@prisma/client';
