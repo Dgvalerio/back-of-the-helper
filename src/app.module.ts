@@ -4,7 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from '@/app.controller';
 import { AppService } from '@/app.service';
-import { UserModule } from '@/user/user.module';
+import { UserModule } from '@/user/module';
 
 import { join } from 'path';
 

@@ -5,9 +5,9 @@ import { UserCreate } from '@/user/create/types';
 import { UserDeleteService } from '@/user/delete/service';
 import { UserReadService } from '@/user/read/service';
 import { UserRead } from '@/user/read/types';
+import { IUserResolver } from '@/user/types';
 import { UserUpdateService } from '@/user/update/service';
 import { UserUpdate } from '@/user/update/types';
-import { IUserResolver } from '@/user/user.types';
 
 @Resolver()
 export class UserResolver implements IUserResolver {
