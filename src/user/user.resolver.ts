@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { UserCreateService } from '@/user/create/create.service';
 import { UserCreate } from '@/user/create/create.types';
+import { UserDeleteService } from '@/user/delete/service';
 import { UserGetInput } from '@/user/dto/user.get.input';
 import { UserOutput } from '@/user/dto/user.get.output';
 import { UserUpdateInput } from '@/user/dto/user.update.input';
@@ -12,7 +13,8 @@ import { IUserResolver } from '@/user/user.types';
 export class UserResolver implements IUserResolver {
   constructor(
     private userService: UserService,
-    private createService: UserCreateService
+    private createService: UserCreateService,
+    private deleteService: UserDeleteService
   ) {}
 
   @Mutation(() => UserOutput)
@@ -37,6 +39,6 @@ export class UserResolver implements IUserResolver {
 
   @Mutation(() => Boolean)
   async delete(@Args('data') data: UserGetInput): Promise<boolean> {
-    return await this.userService.delete(data);
+    return await this.deleteService.delete(data);
   }
 }

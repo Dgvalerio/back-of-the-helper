@@ -16,7 +16,6 @@ export interface IUserService {
   getAll(): Promise<UserOutput[]>;
   getOne(data: UserGetInput): Promise<UserOutput>;
   update(data: UserUpdateInput): Promise<UserOutput>;
-  delete(data: UserGetInput): Promise<boolean>;
   verifyConflict(email: User['email']): Promise<boolean>;
   adapter(user: User): UserOutput;
 }

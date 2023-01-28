@@ -55,10 +55,4 @@ export class UserService implements IUserService {
 
     return this.adapter(user);
   }
-
-  async delete(where: UserGetInput): Promise<boolean> {
-    const res = await this.prisma.user.delete({ where });
-
-    return !!res;
-  }
 }
