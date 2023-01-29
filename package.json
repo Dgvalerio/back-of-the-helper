@@ -1,8 +1,8 @@
 {
   "name": "back-of-the-helper",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "0.1.0",
+  "description": "The Helper API",
+  "author": "Davi <al.davigvalerio@gmail.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
