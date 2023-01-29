@@ -6,4 +6,5 @@ export const userAdapter = (user: User): UserRead.Output => ({
   email: user.email,
   name: user.name,
   password: user.password,
+  resetPasswordToken: user.resetPasswordToken,
 });

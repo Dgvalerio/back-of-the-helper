@@ -9,6 +9,8 @@ import { UserCreate } from '@/user/create/types';
 import { UserDeleteService } from '@/user/delete/service';
 import { UserReadService } from '@/user/read/service';
 import { UserRead } from '@/user/read/types';
+import { UserRecoveryService } from '@/user/recovery/service';
+import { UserRecovery } from '@/user/recovery/types';
 import { IUserResolver } from '@/user/types';
 import { UserUpdateService } from '@/user/update/service';
 import { UserUpdate } from '@/user/update/types';
@@ -17,6 +19,7 @@ import { UserUpdate } from '@/user/update/types';
 export class UserResolver implements IUserResolver {
   constructor(
     private authService: UserAuthService,
+    private recoveryService: UserRecoveryService,
     private createService: UserCreateService,
     private readService: UserReadService,
     private updateService: UserUpdateService,
@@ -24,15 +27,27 @@ export class UserResolver implements IUserResolver {
   ) {}
 
   @Mutation(() => UserAuth.Output)
-  public async login(
-    @Args('data') data: UserAuth.Input
-  ): Promise<UserAuth.Output> {
+  async login(@Args('data') data: UserAuth.Input): Promise<UserAuth.Output> {
     const response = await this.authService.validate(data);
 
     return {
       user: response.user,
       token: response.token,
     };
+  }
+
+  @Mutation(() => Boolean)
+  async sendResetPasswordEmail(
+    @Args('data') data: UserRecovery.SendInput
+  ): Promise<boolean> {
+    return await this.recoveryService.sendToken(data.email);
+  }
+
+  @Mutation(() => Boolean)
+  async updatePassword(
+    @Args('data') data: UserRecovery.UpdateInput
+  ): Promise<boolean> {
+    return await this.recoveryService.updatePassword(data);
   }
 
   @Mutation(() => UserRead.Output)

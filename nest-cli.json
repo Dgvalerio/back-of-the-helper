@@ -16,6 +16,10 @@
           "introspectComments": true
         }
       }
-    ]
+    ],
+    "assets": [
+      "**/*.hbs"
+    ],
+    "watchAssets": true
   }
 }

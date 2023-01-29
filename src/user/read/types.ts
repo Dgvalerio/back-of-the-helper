@@ -24,7 +24,7 @@ export namespace UserRead {
   }
 
   @ObjectType('UserOutput')
-  export class Output implements Omit<User, 'password'> {
+  export class Output implements User {
     @Field()
     id: string;
 
@@ -37,5 +37,8 @@ export namespace UserRead {
     @Field()
     @HideField()
     password: string;
+
+    @Field()
+    resetPasswordToken: string | null;
   }
 }
