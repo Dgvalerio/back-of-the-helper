@@ -5,6 +5,7 @@ import { EmailConflictError } from '@/user/errors/email-conflict.error';
 import { UserRead } from '@/user/read/types';
 import { UserUpdate } from '@/user/update/types';
 import { userAdapter } from '@/user/utils/adapter';
+import { hashPasswordTransform } from '@/user/utils/crypto';
 
 @Injectable()
 export class UserUpdateService implements UserUpdate.Service {
@@ -14,6 +15,14 @@ export class UserUpdateService implements UserUpdate.Service {
     const exists = await this.prisma.user.findFirst({ where: { email } });
 
     return !!exists;
+  }
+
+  comparePasswords(password: string, confirmation: string): void {
+    if (password !== confirmation) {
+      throw new BadRequestException(
+        'A confirmação de senha deve ser igual à nova senha!'
+      );
+    }
   }
 
   async update(id: string, data: UserUpdate.Input): Promise<UserRead.Output> {
@@ -27,6 +36,14 @@ export class UserUpdateService implements UserUpdate.Service {
       const conflict = await this.verifyConflict(data.email);
 
       if (conflict) throw new EmailConflictError();
+    }
+
+    if (data.password) {
+      this.comparePasswords(data.password, data.passwordConfirmation);
+
+      data.password = hashPasswordTransform.to(data.password);
+
+      delete data.passwordConfirmation;
     }
 
     const user = await this.prisma.user.update({ where: { id }, data });

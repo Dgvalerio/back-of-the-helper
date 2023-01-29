@@ -2,12 +2,25 @@ import { InputType } from '@nestjs/graphql';
 
 import { UserRead } from '@/user/read/types';
 
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+  ValidateIf,
+} from 'class-validator';
+
+type User = UserRead.Output;
 
 export namespace UserUpdate {
   export interface Service {
-    update(id: UserRead.Output['id'], data: Input): Promise<UserRead.Output>;
-    verifyConflict(email: UserRead.Output['email']): Promise<boolean>;
+    update(id: User['id'], data: Input): Promise<User>;
+    verifyConflict(email: User['email']): Promise<boolean>;
+    comparePasswords(
+      password: User['password'],
+      passwordConfirmation: User['password']
+    ): void;
   }
 
   @InputType('UserUpdateInput')
@@ -18,11 +31,18 @@ export namespace UserUpdate {
 
     @IsEmail()
     @IsOptional()
-    email?: string;
+    email?: User['email'];
 
     @IsString()
     @MinLength(8)
     @IsOptional()
-    password?: string;
+    @IsNotEmpty({ message: 'Informe sua nova senha.' })
+    password?: User['password'];
+
+    @IsString()
+    @MinLength(8)
+    @ValidateIf((o) => o.password)
+    @IsNotEmpty({ message: 'Confirme sua nova senha.' })
+    passwordConfirmation?: User['password'];
   }
 }
