@@ -12,8 +12,8 @@ import { userAdapter } from '@/user/utils/adapter';
 export class UserReadService implements UserRead.Service {
   constructor(private prisma: PrismaService) {}
 
-  async getAll(): Promise<UserRead.Output[]> {
-    const user = await this.prisma.user.findMany();
+  async getAll(where: UserRead.Input): Promise<UserRead.Output[]> {
+    const user = await this.prisma.user.findMany({ where });
 
     return user.map(userAdapter);
   }

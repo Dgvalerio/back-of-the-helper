@@ -40,14 +40,18 @@ export class UserResolver implements IUserResolver {
     return await this.createService.create(data);
   }
 
+  @UseGuards(UserAuthGuard)
   @Query(() => UserRead.Output)
-  async getOne(@Args('data') data: UserRead.Input): Promise<UserRead.Output> {
-    return await this.readService.getOne(data);
+  async getOne(@Context() context: UserAuth.Context): Promise<UserRead.Output> {
+    return await this.readService.getOne({ id: context.req.user.id });
   }
 
+  @UseGuards(UserAuthGuard)
   @Query(() => [UserRead.Output])
-  async getAll(): Promise<UserRead.Output[]> {
-    return await this.readService.getAll();
+  async getAll(
+    @Context() context: UserAuth.Context
+  ): Promise<UserRead.Output[]> {
+    return await this.readService.getAll({ id: context.req.user.id });
   }
 
   @UseGuards(UserAuthGuard)

@@ -6,8 +6,8 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export namespace UserRead {
   export interface Service {
-    getAll(): Promise<UserRead.Output[]>;
-    getOne(data: UserRead.Input): Promise<UserRead.Output>;
+    getAll(where: Input): Promise<Output[]>;
+    getOne(data: Input): Promise<Output>;
   }
 
   @InputType('UserGetInput')

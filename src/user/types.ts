@@ -5,8 +5,8 @@ import { UserUpdate } from '@/user/update/types';
 
 export interface IUserResolver {
   create(data: UserCreate.Input): Promise<UserRead.Output>;
-  getAll(): Promise<UserRead.Output[]>;
-  getOne(data: UserRead.Input): Promise<UserRead.Output>;
+  getAll(context: UserAuth.Context): Promise<UserRead.Output[]>;
+  getOne(context: UserAuth.Context): Promise<UserRead.Output>;
   update(
     context: UserAuth.Context,
     data: UserUpdate.Input
