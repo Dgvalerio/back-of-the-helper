@@ -50,9 +50,13 @@ export class UserResolver implements IUserResolver {
     return await this.readService.getAll();
   }
 
+  @UseGuards(UserAuthGuard)
   @Mutation(() => UserRead.Output)
-  async update(@Args('data') data: UserUpdate.Input): Promise<UserRead.Output> {
-    return await this.updateService.update(data);
+  async update(
+    @Context() context: UserAuth.Context,
+    @Args('data') data: UserUpdate.Input
+  ): Promise<UserRead.Output> {
+    return await this.updateService.update(context.req.user.id, data);
   }
 
   @UseGuards(UserAuthGuard)

@@ -1,28 +1,17 @@
 import { InputType } from '@nestjs/graphql';
 
 import { UserRead } from '@/user/read/types';
-import { User } from '@prisma/client';
 
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export namespace UserUpdate {
   export interface Service {
-    update(data: Input): Promise<UserRead.Output>;
-    verifyConflict(email: User['email']): Promise<boolean>;
+    update(id: UserRead.Output['id'], data: Input): Promise<UserRead.Output>;
+    verifyConflict(email: UserRead.Output['email']): Promise<boolean>;
   }
 
   @InputType('UserUpdateInput')
   export class Input {
-    @IsString()
-    @IsNotEmpty()
-    id: string;
-
     @IsString()
     @IsOptional()
     name?: string;

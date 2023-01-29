@@ -16,7 +16,7 @@ export class UserUpdateService implements UserUpdate.Service {
     return !!exists;
   }
 
-  async update({ id, ...data }: UserUpdate.Input): Promise<UserRead.Output> {
+  async update(id: string, data: UserUpdate.Input): Promise<UserRead.Output> {
     if (Object.keys(data).length === 0) {
       throw new BadRequestException(
         'Nenhum parâmetro foi informado para atualização'
