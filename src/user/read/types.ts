@@ -1,5 +1,6 @@
 import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
 
+import { GithubInfosRead } from '@/github/infos/read/types';
 import { User } from '@prisma/client';
 
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
@@ -40,5 +41,8 @@ export namespace UserRead {
 
     @Field()
     resetPasswordToken: string | null;
+
+    @Field()
+    githubInfos?: GithubInfosRead.Output;
   }
 }
