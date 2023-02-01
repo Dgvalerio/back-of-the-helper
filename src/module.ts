@@ -4,8 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 
-import { AppController } from '@/app.controller';
-import { AppService } from '@/app.service';
+import { AppController } from '@/controller';
 import { UserModule } from '@/user/module';
 
 import { join } from 'path';
@@ -39,6 +38,6 @@ import * as process from 'process';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
