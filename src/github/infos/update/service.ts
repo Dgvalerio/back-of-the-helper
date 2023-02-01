@@ -28,6 +28,8 @@ export class GithubInfosUpdateService implements GithubInfosUpdate.Service {
     userId: string,
     data: GithubInfosUpdate.Input
   ): Promise<GithubInfosRead.Output> {
+    await this.verifyTokenIsValid(data.token);
+
     const githubInfos = await this.prisma.githubInfos.update({
       where: { userId },
       data,
