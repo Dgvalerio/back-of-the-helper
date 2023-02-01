@@ -11,7 +11,7 @@ import { UserReadService } from '@/user/read/service';
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
-        signOptions: { expiresIn: '2m' },
+        signOptions: { expiresIn: '1d' },
       }),
     }),
   ],
