@@ -10,12 +10,12 @@ export interface IUserResolver {
   // AUTH
   login(data: UserAuth.Input): Promise<UserAuth.Output>;
   // CRUD
-  create(data: UserCreate.Input): Promise<User>;
-  getAll(context: UserAuth.Context): Promise<User[]>;
-  getOne(context: UserAuth.Context): Promise<User>;
-  update(context: UserAuth.Context, data: UserUpdate.Input): Promise<User>;
-  delete(context: UserAuth.Context): Promise<boolean>;
+  createUser(data: UserCreate.Input): Promise<User>;
+  getAllUsers(context: UserAuth.Context): Promise<User[]>;
+  getOneUser(context: UserAuth.Context): Promise<User>;
+  updateUser(context: UserAuth.Context, data: UserUpdate.Input): Promise<User>;
+  deleteUser(context: UserAuth.Context): Promise<boolean>;
   // RECOVERY
-  sendResetPasswordEmail(data: UserRecovery.SendInput): Promise<boolean>;
-  updatePassword(data: UserRecovery.UpdateInput): Promise<boolean>;
+  sendResetUserPasswordEmail(data: UserRecovery.SendInput): Promise<boolean>;
+  updateUserPassword(data: UserRecovery.UpdateInput): Promise<boolean>;
 }
