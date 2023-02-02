@@ -14,7 +14,7 @@ export class GithubInfosDeleteService implements GithubInfosDelete.Service {
   async checkTokenExists(userId: string): Promise<void> {
     const exists = await this.userReadService.getOne({ id: userId });
 
-    if (!exists) {
+    if (!exists.githubInfos) {
       throw new NotFoundException('Esse usuário não possui um token!');
     }
   }
