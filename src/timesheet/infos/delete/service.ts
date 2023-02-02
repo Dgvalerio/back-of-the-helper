@@ -16,7 +16,7 @@ export class TimesheetInfosDeleteService
   async checkLoginExists(userId: string): Promise<void> {
     const exists = await this.userReadService.getOne({ id: userId });
 
-    if (!exists) {
+    if (!exists.timesheetInfos) {
       throw new NotFoundException('Esse usuário não possui um acesso azure!');
     }
   }
