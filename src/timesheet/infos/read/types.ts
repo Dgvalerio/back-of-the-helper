@@ -37,7 +37,10 @@ export namespace TimesheetInfosRead {
     login: string;
 
     @Field()
-    password: string;
+    iv: string;
+
+    @Field()
+    content: string;
 
     @Field()
     userId: string;

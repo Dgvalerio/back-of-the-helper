@@ -6,6 +6,7 @@ export const timesheetInfosAdapter = (
 ): TimesheetInfosRead.Output => ({
   id: infos.id,
   login: infos.login,
-  password: infos.password,
+  iv: infos.iv,
+  content: infos.content,
   userId: infos.userId,
 });

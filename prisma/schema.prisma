@@ -28,9 +28,10 @@ model GithubInfos {
 }
 
 model TimesheetInfos {
-  id       String @id @default(uuid())
-  login    String @unique
-  password String
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @unique
+  id      String @id @default(uuid())
+  login   String @unique
+  iv      String
+  content String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @unique
 }

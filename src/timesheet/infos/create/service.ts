@@ -4,6 +4,7 @@ import { PrismaService } from '@/prisma.service';
 import { TimesheetInfosCreate } from '@/timesheet/infos/create/types';
 import { TimesheetInfosRead } from '@/timesheet/infos/read/types';
 import { timesheetInfosAdapter } from '@/timesheet/infos/utils/adapter';
+import { encryptAzurePassword } from '@/timesheet/infos/utils/encryptPassword';
 import { UserReadService } from '@/user/read/service';
 
 @Injectable()
@@ -28,8 +29,15 @@ export class TimesheetInfosCreateService
   ): Promise<TimesheetInfosRead.Output> {
     await this.verifyAlreadyCreated(userId);
 
+    const crypto = await encryptAzurePassword(data.password);
+
     const user = await this.prisma.timesheetInfos.create({
-      data: { userId, login: data.login, password: data.password },
+      data: {
+        userId,
+        login: data.login,
+        iv: crypto.iv,
+        content: crypto.content,
+      },
     });
 
     return timesheetInfosAdapter(user);

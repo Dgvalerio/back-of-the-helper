@@ -18,3 +18,8 @@ export interface ITimesheetInfosResolver {
   ): Promise<TimesheetInfos>;
   deleteTimesheetInfos(context: UserAuth.Context): Promise<boolean>;
 }
+
+export interface CryptoHash {
+  iv: string;
+  content: string;
+}
