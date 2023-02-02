@@ -11,12 +11,13 @@ datasource db {
 }
 
 model User {
-  id                 String       @id @default(uuid())
+  id                 String          @id @default(uuid())
   name               String
-  email              String       @unique
+  email              String          @unique
   password           String
   resetPasswordToken String?
   GithubInfos        GithubInfos?
+  TimesheetInfos     TimesheetInfos?
 }
 
 model GithubInfos {
@@ -24,4 +25,12 @@ model GithubInfos {
   token  String
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
+}
+
+model TimesheetInfos {
+  id       String @id @default(uuid())
+  login    String @unique
+  password String
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @unique
 }
