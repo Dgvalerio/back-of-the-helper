@@ -1,6 +1,7 @@
 import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
 
 import { GithubInfosRead } from '@/github/infos/read/types';
+import { TimesheetInfosRead } from '@/timesheet/infos/read/types';
 import { User } from '@prisma/client';
 
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
@@ -44,5 +45,8 @@ export namespace UserRead {
 
     @Field()
     githubInfos?: GithubInfosRead.Output;
+
+    @Field()
+    timesheetInfos?: TimesheetInfosRead.Output;
   }
 }

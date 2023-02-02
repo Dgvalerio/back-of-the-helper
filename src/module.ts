@@ -6,6 +6,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from '@/controller';
 import { GithubModule } from '@/github/module';
+import { TimesheetModule } from '@/timesheet/module';
 import { UserModule } from '@/user/module';
 
 import { join } from 'path';
@@ -38,6 +39,7 @@ import * as process from 'process';
     }),
     UserModule,
     GithubModule,
+    TimesheetModule,
   ],
   controllers: [AppController],
   providers: [],

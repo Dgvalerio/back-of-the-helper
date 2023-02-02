@@ -2,14 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/prisma.service';
 import { EmailConflictError } from '@/user/errors/email-conflict.error';
+import { UserReadService } from '@/user/read/service';
 import { UserRead } from '@/user/read/types';
 import { UserUpdate } from '@/user/update/types';
-import { userAdapter } from '@/user/utils/adapter';
 import { hashPasswordTransform } from '@/user/utils/crypto';
 
 @Injectable()
 export class UserUpdateService implements UserUpdate.Service {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readService: UserReadService
+  ) {}
 
   async verifyConflict(email: string): Promise<boolean> {
     const exists = await this.prisma.user.findFirst({ where: { email } });
@@ -48,6 +51,6 @@ export class UserUpdateService implements UserUpdate.Service {
 
     const user = await this.prisma.user.update({ where: { id }, data });
 
-    return userAdapter(user);
+    return await this.readService.getOne({ id: user.id });
   }
 }
