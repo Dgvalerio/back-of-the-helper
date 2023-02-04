@@ -28,7 +28,11 @@ export class UserReadService implements UserRead.Service {
 
     const user = await this.prisma.user.findUnique({
       where: where.id ? { id: where.id } : { email: where.email },
-      include: { GithubInfos: true, TimesheetInfos: true },
+      include: {
+        GithubInfos: true,
+        TimesheetInfos: true,
+        GithubRepository: true,
+      },
     });
 
     if (!user) {
