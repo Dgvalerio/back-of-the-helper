@@ -63,6 +63,7 @@ export class GithubRepositoryCreateService
 
     const repository = await this.prisma.githubRepository.create({
       data: { userId, fullName: data.fullName },
+      include: { GithubBranch: true },
     });
 
     return githubRepositoryAdapter(repository);

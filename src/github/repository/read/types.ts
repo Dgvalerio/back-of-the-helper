@@ -1,5 +1,6 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
+import { GithubBranchRead } from '@/github/branch/read/types';
 import { Endpoints } from '@octokit/types';
 import { GithubRepository, User } from '@prisma/client';
 
@@ -33,6 +34,9 @@ export namespace GithubRepositoryRead {
 
     @Field()
     userId: string;
+
+    @Field()
+    branch?: GithubBranchRead.Output;
   }
 
   @ObjectType('GithubRepositoryLoadOutput')

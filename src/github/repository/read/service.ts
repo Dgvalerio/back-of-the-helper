@@ -61,6 +61,7 @@ export class GithubRepositoryReadService
   async getAll(userId: string): Promise<GithubRepositoryRead.Output[]> {
     const infos = await this.prisma.githubRepository.findMany({
       where: { userId },
+      include: { GithubBranch: true },
     });
 
     return infos.map(githubRepositoryAdapter);
@@ -76,6 +77,7 @@ export class GithubRepositoryReadService
 
     const githubRepository = await this.prisma.githubRepository.findFirst({
       where: { userId, fullName: where.fullName },
+      include: { GithubBranch: true },
     });
 
     if (!githubRepository) {
