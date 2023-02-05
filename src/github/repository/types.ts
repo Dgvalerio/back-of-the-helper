@@ -16,7 +16,10 @@ export interface IGithubRepositoryResolver {
   getAllGithubRepositories(
     context: UserAuth.Context
   ): Promise<GithubRepository[]>;
-  getOneGithubRepository(context: UserAuth.Context): Promise<GithubRepository>;
+  getOneGithubRepository(
+    context: UserAuth.Context,
+    data: GithubRepositoryRead.Input
+  ): Promise<GithubRepository>;
   deleteGithubRepository(
     context: UserAuth.Context,
     data: GithubRepositoryDelete.Input

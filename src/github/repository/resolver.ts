@@ -39,9 +39,10 @@ export class GithubRepositoryResolver implements IGithubRepositoryResolver {
   @UseGuards(UserAuthGuard)
   @Query(() => GithubRepositoryRead.Output)
   async getOneGithubRepository(
-    @Context() context: UserAuth.Context
+    @Context() context: UserAuth.Context,
+    @Args('data') data: GithubRepositoryRead.Input
   ): Promise<GithubRepositoryRead.Output> {
-    return await this.readService.getOne({ userId: context.req.user.id });
+    return await this.readService.getOne(context.req.user.id, data);
   }
 
   @UseGuards(UserAuthGuard)
@@ -49,7 +50,7 @@ export class GithubRepositoryResolver implements IGithubRepositoryResolver {
   async getAllGithubRepositories(
     @Context() context: UserAuth.Context
   ): Promise<GithubRepositoryRead.Output[]> {
-    return await this.readService.getAll({ userId: context.req.user.id });
+    return await this.readService.getAll(context.req.user.id);
   }
 
   @UseGuards(UserAuthGuard)

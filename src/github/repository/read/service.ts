@@ -58,23 +58,24 @@ export class GithubRepositoryReadService
     );
   }
 
-  async getAll(
-    where: GithubRepositoryRead.Input
-  ): Promise<GithubRepositoryRead.Output[]> {
-    const infos = await this.prisma.githubRepository.findMany({ where });
+  async getAll(userId: string): Promise<GithubRepositoryRead.Output[]> {
+    const infos = await this.prisma.githubRepository.findMany({
+      where: { userId },
+    });
 
     return infos.map(githubRepositoryAdapter);
   }
 
   async getOne(
+    userId: string,
     where: GithubRepositoryRead.Input
   ): Promise<GithubRepositoryRead.Output> {
     if (Object.keys(where).length === 0) {
       throw new BadRequestException('Nenhum parâmetro foi informado');
     }
 
-    const githubRepository = await this.prisma.githubRepository.findUnique({
-      where: { id: where.id },
+    const githubRepository = await this.prisma.githubRepository.findFirst({
+      where: { userId, fullName: where.fullName },
     });
 
     if (!githubRepository) {
