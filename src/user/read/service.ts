@@ -31,7 +31,7 @@ export class UserReadService implements UserRead.Service {
       include: {
         GithubInfos: true,
         TimesheetInfos: true,
-        GithubRepository: true,
+        GithubRepository: { include: { GithubBranch: true } },
       },
     });
 
