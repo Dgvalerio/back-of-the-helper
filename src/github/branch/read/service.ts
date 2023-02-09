@@ -32,11 +32,11 @@ export class GithubBranchReadService implements GithubBranchRead.Service {
 
   async load(
     userId: string,
-    repository: string
+    data: GithubBranchRead.LoadInput
   ): Promise<GithubBranchRead.LoadOutput[]> {
-    await this.checkRepositoryExists(userId, repository);
+    await this.checkRepositoryExists(userId, data.repository);
 
-    const [owner, repo] = repository.split('/');
+    const [owner, repo] = data.repository.split('/');
 
     const { githubInfos } = await this.readUser.getOne({ id: userId });
 
@@ -67,9 +67,9 @@ export class GithubBranchReadService implements GithubBranchRead.Service {
       return aux;
     };
 
-    const data = await get();
+    const branches = await get();
 
-    return data.map(
+    return branches.map(
       ({ name, commit }): GithubBranchRead.LoadOutput => ({
         name,
         sha: commit.sha,

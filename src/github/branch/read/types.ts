@@ -20,7 +20,7 @@ export namespace GithubBranchRead {
     ): Promise<string>;
     load(
       userId: UserRead.Output['id'],
-      repository: Repository['fullName']
+      repository: LoadInput
     ): Promise<LoadOutput[]>;
   }
 
@@ -29,6 +29,13 @@ export namespace GithubBranchRead {
     @IsString()
     @IsNotEmpty({ message: 'Informe o nome da branch.' })
     name: string;
+  }
+
+  @InputType('GithubBranchGetLoadInput')
+  export class LoadInput {
+    @IsString()
+    @IsNotEmpty({ message: 'Informe o nome do repositório.' })
+    repository: Repository['fullName'];
   }
 
   @ObjectType('GithubBranchOutput')
