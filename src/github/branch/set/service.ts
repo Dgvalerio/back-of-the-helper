@@ -1,16 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { GithubBranchCreate } from '@/github/branch/create/types';
 import { GithubBranchRead } from '@/github/branch/read/types';
+import { GithubBranchSet } from '@/github/branch/set/types';
 import { githubBranchAdapter } from '@/github/branch/utils/adapter';
 import { GithubRepositoryReadService } from '@/github/repository/read/service';
 import { PrismaService } from '@/prisma.service';
 import { UserReadService } from '@/user/read/service';
+import { GithubBranch } from '@prisma/client';
 
 import { Octokit } from 'octokit';
 
 @Injectable()
-export class GithubBranchCreateService implements GithubBranchCreate.Service {
+export class GithubBranchSetService implements GithubBranchSet.Service {
   constructor(
     private prisma: PrismaService,
     private userRead: UserReadService,
@@ -40,9 +41,9 @@ export class GithubBranchCreateService implements GithubBranchCreate.Service {
     }
   }
 
-  async create(
+  async set(
     userId: string,
-    data: GithubBranchCreate.Input
+    data: GithubBranchSet.Input
   ): Promise<GithubBranchRead.Output> {
     const sha = await this.verifyBranchIsValid(
       userId,
@@ -50,13 +51,23 @@ export class GithubBranchCreateService implements GithubBranchCreate.Service {
       data.branch
     );
 
-    const { id: repositoryId } = await this.repositoryRead.getOne(userId, {
+    const repository = await this.repositoryRead.getOne(userId, {
       fullName: data.repository,
     });
 
-    const branch = await this.prisma.githubBranch.create({
-      data: { name: data.branch, sha, repositoryId },
-    });
+    let branch: GithubBranch;
+    const repositoryId = repository.id;
+
+    if (repository.branch) {
+      branch = await this.prisma.githubBranch.update({
+        where: { repositoryId },
+        data: { name: data.branch, sha },
+      });
+    } else {
+      branch = await this.prisma.githubBranch.create({
+        data: { name: data.branch, sha, repositoryId },
+      });
+    }
 
     return githubBranchAdapter(branch);
   }

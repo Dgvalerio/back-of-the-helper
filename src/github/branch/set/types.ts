@@ -5,9 +5,9 @@ import { User } from '@prisma/client';
 
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export namespace GithubBranchCreate {
+export namespace GithubBranchSet {
   export interface Service {
-    create(userId: User['id'], data: Input): Promise<GithubBranchRead.Output>;
+    set(userId: User['id'], data: Input): Promise<GithubBranchRead.Output>;
     verifyBranchIsValid(
       userId: User['id'],
       repository: Input['repository'],
@@ -15,7 +15,7 @@ export namespace GithubBranchCreate {
     ): Promise<string>;
   }
 
-  @InputType('GithubBranchCreateInput')
+  @InputType('GithubBranchSetInput')
   export class Input {
     @IsString()
     @IsNotEmpty({ message: 'Informe o nome do repositório.' })
