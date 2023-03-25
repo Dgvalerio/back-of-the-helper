@@ -42,15 +42,15 @@ export namespace GithubRepositoryRead {
   @ObjectType('GithubRepositoryLoadOutput')
   export class LoadOutput {
     @Field()
-    fullName: string;
+    fullName: Repository['full_name'];
 
     @Field()
-    name: string;
+    name: Repository['name'];
 
     @Field()
-    ownerLogin: string;
+    ownerLogin: Repository['owner']['login'];
 
     @Field()
-    ownerAvatar: string;
+    ownerAvatar: Repository['owner']['avatar_url'];
   }
 }
