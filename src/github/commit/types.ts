@@ -5,4 +5,7 @@ export interface IGithubCommitResolver {
   loadGithubCommits(
     context: UserAuth.Context
   ): Promise<GithubCommitRead.LoadOutput[]>;
+  loadGithubCommitsGroupedByDay(
+    context: UserAuth.Context
+  ): Promise<GithubCommitRead.GithubCommitDayGroup[]>;
 }

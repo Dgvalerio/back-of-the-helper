@@ -21,6 +21,11 @@ export namespace GithubCommitRead {
       userEmail: UserRead.Output['email'],
       githubToken: UserRead.Output['githubInfos']['token']
     ): Promise<LoadOutput[]>;
+    loadGroupedByDay(
+      userId: UserRead.Output['id'],
+      userEmail: UserRead.Output['email'],
+      githubToken: UserRead.Output['githubInfos']['token']
+    ): Promise<GithubCommitDayGroup[]>;
   }
 
   @ObjectType('GithubCommitLoadOutput')
@@ -30,6 +35,30 @@ export namespace GithubCommitRead {
 
     @Field()
     date: Commit['commit']['committer']['date'];
+
+    @Field()
+    description: Commit['commit']['message'];
+
+    @Field()
+    commit: Commit['html_url'];
+  }
+
+  @ObjectType('GithubCommitDayGroup')
+  export class GithubCommitDayGroup {
+    @Field()
+    date: Commit['commit']['committer']['date'];
+
+    @Field()
+    commits: GithubCommitOfDayGroup[];
+  }
+
+  @ObjectType('GithubCommitOfDayGroup')
+  export class GithubCommitOfDayGroup {
+    @Field()
+    repo: GithubRepositoryRead.Output['fullName'];
+
+    @Field()
+    time: Commit['commit']['committer']['date'];
 
     @Field()
     description: Commit['commit']['message'];

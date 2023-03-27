@@ -37,7 +37,9 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     commits: GithubCommitRead.LoadOutput[]
   ): GithubCommitRead.LoadOutput[] {
     return commits.filter(
-      ({ description }) => !description.includes("Merge branch '")
+      ({ description }) =>
+        !description.includes("Merge branch '") &&
+        !description.includes('Merge pull request #')
     );
   }
 
@@ -98,6 +100,38 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
 
     return this.sortCommitsByDate(
       this.joinRepositoryCommits(await Promise.all(commitsPromise))
+    );
+  }
+
+  async loadGroupedByDay(
+    userId: string,
+    userEmail: string,
+    githubToken: string
+  ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
+    const commits = await this.load(userId, userEmail, githubToken);
+
+    const grouped: Record<string, GithubCommitRead.LoadOutput[]> = {};
+
+    commits.forEach((item) => {
+      const day = item.date.split('T')[0];
+
+      if (grouped[day]) {
+        grouped[day].push(item);
+      } else {
+        grouped[day] = [item];
+      }
+    });
+
+    return Object.entries(grouped).map(
+      ([day, commit]): GithubCommitRead.GithubCommitDayGroup => ({
+        date: day,
+        commits: commit.map((c) => ({
+          repo: c.repo,
+          time: c.date.split('T')[1].split('.')[0],
+          description: c.description,
+          commit: c.commit,
+        })),
+      })
     );
   }
 }

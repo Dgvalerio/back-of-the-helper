@@ -20,4 +20,18 @@ export class GithubCommitResolver implements IGithubCommitResolver {
 
     return await this.readService.load(id, email, githubInfos.token);
   }
+
+  @UseGuards(UserAuthGuard)
+  @Query(() => [GithubCommitRead.GithubCommitDayGroup])
+  async loadGithubCommitsGroupedByDay(
+    @Context() context: UserAuth.Context
+  ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
+    const { id, email, githubInfos } = context.req.user;
+
+    return await this.readService.loadGroupedByDay(
+      id,
+      email,
+      githubInfos.token
+    );
+  }
 }
