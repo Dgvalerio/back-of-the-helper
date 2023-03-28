@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { GithubCommitRead } from '@/github/commit/read/types';
 import { GithubRepositoryReadService } from '@/github/repository/read/service';
 import { PrismaService } from '@/prisma.service';
+import { translate } from '@vitalets/google-translate-api';
 
 import { Octokit } from 'octokit';
 
@@ -133,5 +134,66 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
         })),
       })
     );
+  }
+
+  translateConventionalCommits(
+    commits: GithubCommitRead.LoadOutput[]
+  ): GithubCommitRead.LoadOutput[] {
+    const hashmap = {
+      feat: 'Desenvolvimento de feature',
+      fix: 'Correção/manutenção de bug',
+      docs: 'Documentação',
+      style: 'Formatação de estilos',
+      refactor: 'Refatoração',
+      chore: 'Outras alterações',
+      test: 'Testes automatizados',
+      merge: 'Review de Pull Request',
+    };
+
+    return commits.map((commit) => ({
+      ...commit,
+      description: commit.description.replace(
+        /feat|fix|docs|style|refactor|chore|test|merge/i,
+        (key) => hashmap[key]
+      ),
+    }));
+  }
+
+  parseLocation(
+    commits: GithubCommitRead.LoadOutput[]
+  ): GithubCommitRead.LoadOutput[] {
+    return commits.map((commit) => ({
+      ...commit,
+      description: commit.description.replace(
+        /\(([\w\-]+)\):/gm,
+        (_, location) => ` em "${location}":`
+      ),
+    }));
+  }
+
+  async translateMessage(
+    commits: GithubCommitRead.LoadOutput[]
+  ): Promise<GithubCommitRead.LoadOutput[]> {
+    const promise = commits.map(async (commit) => {
+      const [head, message] = commit.description.split(':');
+      const { text } = await translate(message, { to: 'pt-br' });
+
+      return { ...commit, description: `${head}: ${text}` };
+    });
+
+    return Promise.all(promise);
+  }
+
+  async loadAndTranlate(
+    userId: string,
+    userEmail: string,
+    githubToken: string
+  ): Promise<GithubCommitRead.LoadOutput[]> {
+    const commits = await this.load(userId, userEmail, githubToken);
+
+    const conventionalTranslated = this.translateConventionalCommits(commits);
+    const locationParsed = this.parseLocation(conventionalTranslated);
+
+    return this.translateMessage(locationParsed);
   }
 }

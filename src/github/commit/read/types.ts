@@ -26,6 +26,20 @@ export namespace GithubCommitRead {
       userEmail: UserRead.Output['email'],
       githubToken: UserRead.Output['githubInfos']['token']
     ): Promise<GithubCommitDayGroup[]>;
+    translateConventionalCommits(
+      commits: GithubCommitRead.LoadOutput[]
+    ): GithubCommitRead.LoadOutput[];
+    parseLocation(
+      commits: GithubCommitRead.LoadOutput[]
+    ): GithubCommitRead.LoadOutput[];
+    translateMessage(
+      commits: GithubCommitRead.LoadOutput[]
+    ): Promise<GithubCommitRead.LoadOutput[]>;
+    loadAndTranlate(
+      userId: UserRead.Output['id'],
+      userEmail: UserRead.Output['email'],
+      githubToken: UserRead.Output['githubInfos']['token']
+    ): Promise<GithubCommitRead.LoadOutput[]>;
   }
 
   @ObjectType('GithubCommitLoadOutput')

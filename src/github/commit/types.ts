@@ -8,4 +8,7 @@ export interface IGithubCommitResolver {
   loadGithubCommitsGroupedByDay(
     context: UserAuth.Context
   ): Promise<GithubCommitRead.GithubCommitDayGroup[]>;
+  loadAndTranslateGithubCommits(
+    context: UserAuth.Context
+  ): Promise<GithubCommitRead.LoadOutput[]>;
 }

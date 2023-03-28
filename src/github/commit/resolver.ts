@@ -22,6 +22,16 @@ export class GithubCommitResolver implements IGithubCommitResolver {
   }
 
   @UseGuards(UserAuthGuard)
+  @Query(() => [GithubCommitRead.LoadOutput])
+  async loadAndTranslateGithubCommits(
+    @Context() context: UserAuth.Context
+  ): Promise<GithubCommitRead.LoadOutput[]> {
+    const { id, email, githubInfos } = context.req.user;
+
+    return await this.readService.loadAndTranlate(id, email, githubInfos.token);
+  }
+
+  @UseGuards(UserAuthGuard)
   @Query(() => [GithubCommitRead.GithubCommitDayGroup])
   async loadGithubCommitsGroupedByDay(
     @Context() context: UserAuth.Context
