@@ -35,7 +35,7 @@ export namespace GithubCommitRead {
     translateMessage(
       commits: GithubCommitRead.LoadOutput[]
     ): Promise<GithubCommitRead.LoadOutput[]>;
-    loadAndTranlate(
+    loadAndTranslate(
       userId: UserRead.Output['id'],
       userEmail: UserRead.Output['email'],
       githubToken: UserRead.Output['githubInfos']['token']

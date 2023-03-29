@@ -28,7 +28,11 @@ export class GithubCommitResolver implements IGithubCommitResolver {
   ): Promise<GithubCommitRead.LoadOutput[]> {
     const { id, email, githubInfos } = context.req.user;
 
-    return await this.readService.loadAndTranlate(id, email, githubInfos.token);
+    return await this.readService.loadAndTranslate(
+      id,
+      email,
+      githubInfos.token
+    );
   }
 
   @UseGuards(UserAuthGuard)

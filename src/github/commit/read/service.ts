@@ -184,7 +184,7 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     return Promise.all(promise);
   }
 
-  async loadAndTranlate(
+  async loadAndTranslate(
     userId: string,
     userEmail: string,
     githubToken: string
