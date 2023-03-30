@@ -65,14 +65,17 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
   async load(
     userId: string,
     userEmail: string,
-    githubToken: string
+    githubToken: string,
+    when?: GithubCommitRead.DateFilter
   ): Promise<GithubCommitRead.LoadOutput[]> {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
 
-    const since = `${year}-${`0${month}`.slice(-2)}-01T00:00:00Z`;
-    const until = `${year}-${`0${month + 1}`.slice(-2)}-01T00:00:00Z`;
+    const since =
+      when?.since || `${year}-${`0${month}`.slice(-2)}-01T00:00:00Z`;
+    const until =
+      when?.until || `${year}-${`0${month + 1}`.slice(-2)}-01T00:00:00Z`;
 
     const defaultConfig = { author: userEmail, per_page: 100, since, until };
 
@@ -195,7 +198,12 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     githubToken: string,
     options: GithubCommitRead.Input
   ): Promise<GithubCommitRead.LoadOutput[]> {
-    const commits = await this.load(userId, userEmail, githubToken);
+    const commits = await this.load(
+      userId,
+      userEmail,
+      githubToken,
+      options.when
+    );
 
     return options.translate ? await this.translateCommits(commits) : commits;
   }
@@ -206,7 +214,7 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     githubToken: string,
     options: GithubCommitRead.Input
   ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
-    let commits = await this.load(userId, userEmail, githubToken);
+    let commits = await this.load(userId, userEmail, githubToken, options.when);
 
     if (options.translate) {
       commits = await this.translateCommits(commits);

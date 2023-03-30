@@ -4,7 +4,7 @@ import { GithubRepositoryRead } from '@/github/repository/read/types';
 import { UserRead } from '@/user/read/types';
 import { Endpoints } from '@octokit/types';
 
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsDateString, IsOptional } from 'class-validator';
 
 export namespace GithubCommitRead {
   export type Commits =
@@ -21,7 +21,8 @@ export namespace GithubCommitRead {
     load(
       userId: UserRead.Output['id'],
       userEmail: UserRead.Output['email'],
-      githubToken: UserRead.Output['githubInfos']['token']
+      githubToken: UserRead.Output['githubInfos']['token'],
+      when: DateFilter
     ): Promise<LoadOutput[]>;
     simpleLoad(
       userId: UserRead.Output['id'],
@@ -42,11 +43,27 @@ export namespace GithubCommitRead {
     translateCommits(commits: LoadOutput[]): Promise<LoadOutput[]>;
   }
 
+  @InputType('GithubCommitReadDateFilter')
+  export class DateFilter {
+    // Desde quando (no formato 2022-12-01T00:00:00Z).
+    @IsDateString()
+    @IsOptional()
+    since?: string;
+
+    // Até quando (no formato 2022-12-01T00:00:00Z).
+    @IsDateString()
+    @IsOptional()
+    until?: string;
+  }
+
   @InputType('GithubCommitReadInput')
   export class Input {
     @IsBoolean()
     @IsOptional()
     translate?: boolean;
+
+    @IsOptional()
+    when?: DateFilter;
   }
 
   @ObjectType('GithubCommitLoadOutput')
