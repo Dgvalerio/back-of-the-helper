@@ -1,8 +1,10 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 import { GithubRepositoryRead } from '@/github/repository/read/types';
 import { UserRead } from '@/user/read/types';
 import { Endpoints } from '@octokit/types';
+
+import { IsBoolean, IsOptional } from 'class-validator';
 
 export namespace GithubCommitRead {
   export type Commits =
@@ -21,25 +23,30 @@ export namespace GithubCommitRead {
       userEmail: UserRead.Output['email'],
       githubToken: UserRead.Output['githubInfos']['token']
     ): Promise<LoadOutput[]>;
-    loadGroupedByDay(
+    simpleLoad(
       userId: UserRead.Output['id'],
       userEmail: UserRead.Output['email'],
-      githubToken: UserRead.Output['githubInfos']['token']
+      githubToken: UserRead.Output['githubInfos']['token'],
+      options: Input
+    ): Promise<LoadOutput[]>;
+    groupedLoad(
+      userId: UserRead.Output['id'],
+      userEmail: UserRead.Output['email'],
+      githubToken: UserRead.Output['githubInfos']['token'],
+      options: Input
     ): Promise<GithubCommitDayGroup[]>;
-    translateConventionalCommits(
-      commits: GithubCommitRead.LoadOutput[]
-    ): GithubCommitRead.LoadOutput[];
-    parseLocation(
-      commits: GithubCommitRead.LoadOutput[]
-    ): GithubCommitRead.LoadOutput[];
-    translateMessage(
-      commits: GithubCommitRead.LoadOutput[]
-    ): Promise<GithubCommitRead.LoadOutput[]>;
-    loadAndTranslate(
-      userId: UserRead.Output['id'],
-      userEmail: UserRead.Output['email'],
-      githubToken: UserRead.Output['githubInfos']['token']
-    ): Promise<GithubCommitRead.LoadOutput[]>;
+    groupByDay(commits: LoadOutput[]): Promise<GithubCommitDayGroup[]>;
+    translateConventionalCommits(commits: LoadOutput[]): LoadOutput[];
+    parseLocation(commits: LoadOutput[]): LoadOutput[];
+    translateMessage(commits: LoadOutput[]): Promise<LoadOutput[]>;
+    translateCommits(commits: LoadOutput[]): Promise<LoadOutput[]>;
+  }
+
+  @InputType('GithubCommitReadInput')
+  export class Input {
+    @IsBoolean()
+    @IsOptional()
+    translate?: boolean;
   }
 
   @ObjectType('GithubCommitLoadOutput')

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Context, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Query, Resolver } from '@nestjs/graphql';
 
 import { GithubCommitReadService } from '@/github/commit/read/service';
 import { GithubCommitRead } from '@/github/commit/read/types';
@@ -14,38 +14,32 @@ export class GithubCommitResolver implements IGithubCommitResolver {
   @UseGuards(UserAuthGuard)
   @Query(() => [GithubCommitRead.LoadOutput])
   async loadGithubCommits(
-    @Context() context: UserAuth.Context
+    @Context() context: UserAuth.Context,
+    @Args('options') options: GithubCommitRead.Input
   ): Promise<GithubCommitRead.LoadOutput[]> {
     const { id, email, githubInfos } = context.req.user;
 
-    return await this.readService.load(id, email, githubInfos.token);
-  }
-
-  @UseGuards(UserAuthGuard)
-  @Query(() => [GithubCommitRead.LoadOutput])
-  async loadAndTranslateGithubCommits(
-    @Context() context: UserAuth.Context
-  ): Promise<GithubCommitRead.LoadOutput[]> {
-    const { id, email, githubInfos } = context.req.user;
-
-    return await this.readService.loadAndTranslate(
+    return await this.readService.simpleLoad(
       id,
       email,
-      githubInfos.token
+      githubInfos.token,
+      options
     );
   }
 
   @UseGuards(UserAuthGuard)
   @Query(() => [GithubCommitRead.GithubCommitDayGroup])
-  async loadGithubCommitsGroupedByDay(
-    @Context() context: UserAuth.Context
+  async loadAndGroupGithubCommits(
+    @Context() context: UserAuth.Context,
+    @Args('options') options: GithubCommitRead.Input
   ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
     const { id, email, githubInfos } = context.req.user;
 
-    return await this.readService.loadGroupedByDay(
+    return await this.readService.groupedLoad(
       id,
       email,
-      githubInfos.token
+      githubInfos.token,
+      options
     );
   }
 }

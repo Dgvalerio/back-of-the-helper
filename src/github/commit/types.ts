@@ -3,12 +3,11 @@ import { UserAuth } from '@/user/auth/types';
 
 export interface IGithubCommitResolver {
   loadGithubCommits(
-    context: UserAuth.Context
+    context: UserAuth.Context,
+    options: GithubCommitRead.Input
   ): Promise<GithubCommitRead.LoadOutput[]>;
-  loadGithubCommitsGroupedByDay(
-    context: UserAuth.Context
+  loadAndGroupGithubCommits(
+    context: UserAuth.Context,
+    options: GithubCommitRead.Input
   ): Promise<GithubCommitRead.GithubCommitDayGroup[]>;
-  loadAndTranslateGithubCommits(
-    context: UserAuth.Context
-  ): Promise<GithubCommitRead.LoadOutput[]>;
 }

@@ -104,13 +104,9 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     );
   }
 
-  async loadGroupedByDay(
-    userId: string,
-    userEmail: string,
-    githubToken: string
+  async groupByDay(
+    commits: GithubCommitRead.LoadOutput[]
   ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
-    const commits = await this.load(userId, userEmail, githubToken);
-
     const grouped: Record<string, GithubCommitRead.LoadOutput[]> = {};
 
     commits.forEach((item) => {
@@ -184,16 +180,38 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     return Promise.all(promise);
   }
 
-  async loadAndTranslate(
-    userId: string,
-    userEmail: string,
-    githubToken: string
+  async translateCommits(
+    commits: GithubCommitRead.LoadOutput[]
   ): Promise<GithubCommitRead.LoadOutput[]> {
-    const commits = await this.load(userId, userEmail, githubToken);
-
     const conventionalTranslated = this.translateConventionalCommits(commits);
     const locationParsed = this.parseLocation(conventionalTranslated);
 
     return this.translateMessage(locationParsed);
+  }
+
+  async simpleLoad(
+    userId: string,
+    userEmail: string,
+    githubToken: string,
+    options: GithubCommitRead.Input
+  ): Promise<GithubCommitRead.LoadOutput[]> {
+    const commits = await this.load(userId, userEmail, githubToken);
+
+    return options.translate ? await this.translateCommits(commits) : commits;
+  }
+
+  async groupedLoad(
+    userId: string,
+    userEmail: string,
+    githubToken: string,
+    options: GithubCommitRead.Input
+  ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
+    let commits = await this.load(userId, userEmail, githubToken);
+
+    if (options.translate) {
+      commits = await this.translateCommits(commits);
+    }
+
+    return this.groupByDay(commits);
   }
 }
