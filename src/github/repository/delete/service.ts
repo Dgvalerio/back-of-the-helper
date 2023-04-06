@@ -38,7 +38,18 @@ export class GithubRepositoryDeleteService
   ): Promise<boolean> {
     const id = await this.checkRepositoryExists(userId, data.fullName);
 
-    const res = await this.prisma.githubRepository.delete({ where: { id } });
+    const deleteBranch = this.prisma.githubBranch.deleteMany({
+      where: { repositoryId: id },
+    });
+
+    const deleteRepository = this.prisma.githubRepository.delete({
+      where: { id },
+    });
+
+    const res = await this.prisma.$transaction([
+      deleteBranch,
+      deleteRepository,
+    ]);
 
     return !!res;
   }
