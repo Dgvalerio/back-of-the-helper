@@ -135,6 +135,70 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     );
   }
 
+  async groupByTime(
+    commits: GithubCommitRead.GithubCommitDayGroup[],
+    dayTimes: GithubCommitRead.DayTime[]
+  ): Promise<GithubCommitRead.GithubCommitDayTimeGroup[]> {
+    const times: GithubCommitRead.GithubCommitTimeGroup[] = dayTimes.map(
+      (time) => ({
+        startTime: time.start,
+        endTime: time.end,
+        items: [] as GithubCommitRead.GithubCommitTimeGroupItems[],
+      })
+    );
+
+    return commits.map((day) => {
+      const date = day.date;
+      const commits: GithubCommitRead.GithubCommitTimeGroup[] = [...times];
+
+      day.commits.forEach((commit) =>
+        times.forEach((t, tIndex) => {
+          if (
+            (commit.time >= t.startTime && commit.time <= t.endTime) ||
+            (commit.time < t.startTime && tIndex === 0) ||
+            (commit.time > t.endTime && tIndex === times.length - 1) ||
+            (!!times[tIndex + 1] &&
+              commit.time > t.endTime &&
+              commit.time < times[tIndex + 1].startTime)
+          ) {
+            commits[tIndex].items.push({
+              repo: commit.repo,
+              commits: [
+                {
+                  description: commit.description,
+                  commit: commit.commit,
+                },
+              ],
+            });
+          }
+        })
+      );
+
+      const joinedCommits = commits.map((c) => {
+        const grouped: Record<
+          GithubCommitRead.GithubCommitTimeGroupItems['repo'],
+          GithubCommitRead.GithubCommitTimeGroupItems['commits']
+        > = {};
+
+        c.items.forEach(({ repo, commits }) =>
+          grouped[repo]
+            ? (grouped[repo] = grouped[repo].concat(commits))
+            : (grouped[repo] = [...commits])
+        );
+
+        return {
+          ...c,
+          items: Object.entries(grouped).map(([repo, commits]) => ({
+            repo,
+            commits,
+          })),
+        };
+      });
+
+      return { date, commits: joinedCommits };
+    });
+  }
+
   translateConventionalCommits(
     commits: GithubCommitRead.LoadOutput[]
   ): GithubCommitRead.LoadOutput[] {
@@ -213,13 +277,15 @@ export class GithubCommitReadService implements GithubCommitRead.Service {
     userEmail: string,
     githubToken: string,
     options: GithubCommitRead.Input
-  ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
+  ): Promise<GithubCommitRead.GithubCommitDayTimeGroup[]> {
     let commits = await this.load(userId, userEmail, githubToken, options.when);
 
     if (options.translate) {
       commits = await this.translateCommits(commits);
     }
 
-    return this.groupByDay(commits);
+    const byDay = await this.groupByDay(commits);
+
+    return await this.groupByTime(byDay, options.dayTimes);
   }
 }

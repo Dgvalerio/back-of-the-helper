@@ -28,11 +28,11 @@ export class GithubCommitResolver implements IGithubCommitResolver {
   }
 
   @UseGuards(UserAuthGuard)
-  @Query(() => [GithubCommitRead.GithubCommitDayGroup])
+  @Query(() => [GithubCommitRead.GithubCommitDayTimeGroup])
   async loadAndGroupGithubCommits(
     @Context() context: UserAuth.Context,
     @Args('options') options: GithubCommitRead.Input
-  ): Promise<GithubCommitRead.GithubCommitDayGroup[]> {
+  ): Promise<GithubCommitRead.GithubCommitDayTimeGroup[]> {
     const { id, email, githubInfos } = context.req.user;
 
     return await this.readService.groupedLoad(

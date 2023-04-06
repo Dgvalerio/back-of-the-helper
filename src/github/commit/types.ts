@@ -9,5 +9,5 @@ export interface IGithubCommitResolver {
   loadAndGroupGithubCommits(
     context: UserAuth.Context,
     options: GithubCommitRead.Input
-  ): Promise<GithubCommitRead.GithubCommitDayGroup[]>;
+  ): Promise<GithubCommitRead.GithubCommitDayTimeGroup[]>;
 }
