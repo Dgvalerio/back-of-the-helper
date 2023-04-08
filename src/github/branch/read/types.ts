@@ -14,10 +14,6 @@ export namespace GithubBranchRead {
     Endpoints['GET /repos/{owner}/{repo}/branches']['response']['data'];
 
   export interface Service {
-    checkRepositoryExists(
-      userId: UserRead.Output['id'],
-      repository: Repository['fullName']
-    ): Promise<string>;
     load(
       userId: UserRead.Output['id'],
       repository: LoadInput

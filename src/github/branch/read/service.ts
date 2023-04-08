@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { GithubBranchRead } from '@/github/branch/read/types';
 import { PrismaService } from '@/prisma.service';
@@ -13,29 +13,10 @@ export class GithubBranchReadService implements GithubBranchRead.Service {
     private readUser: UserReadService
   ) {}
 
-  async checkRepositoryExists(
-    userId: string,
-    repository: string
-  ): Promise<string> {
-    const { githubRepositories } = await this.readUser.getOne({ id: userId });
-
-    const find = githubRepositories.find(
-      ({ fullName }) => fullName === repository
-    );
-
-    if (!find) {
-      throw new NotFoundException('Esse usuário não possui o repositório!');
-    }
-
-    return find.id;
-  }
-
   async load(
     userId: string,
     data: GithubBranchRead.LoadInput
   ): Promise<GithubBranchRead.LoadOutput[]> {
-    await this.checkRepositoryExists(userId, data.repository);
-
     const [owner, repo] = data.repository.split('/');
 
     const { githubInfos } = await this.readUser.getOne({ id: userId });
