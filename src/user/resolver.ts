@@ -37,33 +37,37 @@ export class UserResolver implements IUserResolver {
   }
 
   @Mutation(() => Boolean)
-  async sendResetPasswordEmail(
+  async sendResetUserPasswordEmail(
     @Args('data') data: UserRecovery.SendInput
   ): Promise<boolean> {
     return await this.recoveryService.sendToken(data.email);
   }
 
   @Mutation(() => Boolean)
-  async updatePassword(
+  async updateUserPassword(
     @Args('data') data: UserRecovery.UpdateInput
   ): Promise<boolean> {
     return await this.recoveryService.updatePassword(data);
   }
 
   @Mutation(() => UserRead.Output)
-  async create(@Args('data') data: UserCreate.Input): Promise<UserRead.Output> {
+  async createUser(
+    @Args('data') data: UserCreate.Input
+  ): Promise<UserRead.Output> {
     return await this.createService.create(data);
   }
 
   @UseGuards(UserAuthGuard)
   @Query(() => UserRead.Output)
-  async getOne(@Context() context: UserAuth.Context): Promise<UserRead.Output> {
+  async getOneUser(
+    @Context() context: UserAuth.Context
+  ): Promise<UserRead.Output> {
     return await this.readService.getOne({ id: context.req.user.id });
   }
 
   @UseGuards(UserAuthGuard)
   @Query(() => [UserRead.Output])
-  async getAll(
+  async getAllUsers(
     @Context() context: UserAuth.Context
   ): Promise<UserRead.Output[]> {
     return await this.readService.getAll({ id: context.req.user.id });
@@ -71,7 +75,7 @@ export class UserResolver implements IUserResolver {
 
   @UseGuards(UserAuthGuard)
   @Mutation(() => UserRead.Output)
-  async update(
+  async updateUser(
     @Context() context: UserAuth.Context,
     @Args('data') data: UserUpdate.Input
   ): Promise<UserRead.Output> {
@@ -80,7 +84,7 @@ export class UserResolver implements IUserResolver {
 
   @UseGuards(UserAuthGuard)
   @Mutation(() => Boolean)
-  async delete(@Context() context: UserAuth.Context): Promise<boolean> {
+  async deleteUser(@Context() context: UserAuth.Context): Promise<boolean> {
     return await this.deleteService.delete(context.req.user.id);
   }
 }

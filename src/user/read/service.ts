@@ -13,7 +13,10 @@ export class UserReadService implements UserRead.Service {
   constructor(private prisma: PrismaService) {}
 
   async getAll(where: UserRead.Input): Promise<UserRead.Output[]> {
-    const user = await this.prisma.user.findMany({ where });
+    const user = await this.prisma.user.findMany({
+      where,
+      include: { GithubInfos: true },
+    });
 
     return user.map(userAdapter);
   }
@@ -25,6 +28,11 @@ export class UserReadService implements UserRead.Service {
 
     const user = await this.prisma.user.findUnique({
       where: where.id ? { id: where.id } : { email: where.email },
+      include: {
+        GithubInfos: true,
+        TimesheetInfos: true,
+        GithubRepository: { include: { GithubBranch: true } },
+      },
     });
 
     if (!user) {

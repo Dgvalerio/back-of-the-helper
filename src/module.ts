@@ -5,6 +5,8 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from '@/controller';
+import { GithubModule } from '@/github/module';
+import { TimesheetModule } from '@/timesheet/module';
 import { UserModule } from '@/user/module';
 
 import { join } from 'path';
@@ -36,6 +38,8 @@ import * as process from 'process';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
     UserModule,
+    GithubModule,
+    TimesheetModule,
   ],
   controllers: [AppController],
   providers: [],
