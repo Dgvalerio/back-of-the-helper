@@ -2,40 +2,19 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
 import { AxiosRequestConfig } from 'axios';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Cookie } from 'tough-cookie';
 
 export namespace TimesheetClientRead {
   export interface Service {
-    configRequest(cookies: TimesheetClientRead.Cookie[]): AxiosRequestConfig;
-
+    configRequest(cookies: Cookie[]): AxiosRequestConfig;
     loadCookies(login: string, password: string): Promise<Cookie[]>;
-
     loadCategories(
       projectId: Project['id'],
       cookies: Cookie[]
     ): Promise<Category[]>;
     loadProjects(clientId: Client['id'], cookies: Cookie[]): Promise<Project[]>;
     loadClients(cookies: Cookie[]): Promise<Client[]>;
-
     getAll(data: Input): Promise<Client[]>;
-  }
-
-  export interface Cookie {
-    name: string;
-    value: string;
-    domain: string;
-    path: string;
-    expires: number;
-    size: number;
-    httpOnly: boolean;
-    secure: boolean;
-    session: boolean;
-    sameSite?: unknown;
-    priority: unknown;
-    sameParty: boolean;
-    sourceScheme: unknown;
-    sourcePort: number;
-    partitionKey?: string;
-    partitionKeyOpaque?: boolean;
   }
 
   @ObjectType('TimesheetCategory')

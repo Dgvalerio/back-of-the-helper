@@ -8,7 +8,7 @@ import { decryptPassword } from '@/timesheet/infos/utils/decryptPassword';
 
 import { AxiosRequestConfig } from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
-import { CookieJar } from 'tough-cookie';
+import { CookieJar, Cookie } from 'tough-cookie';
 
 @Injectable({ scope: Scope.REQUEST })
 export class TimesheetClientReadService implements TimesheetClientRead.Service {
@@ -17,9 +17,9 @@ export class TimesheetClientReadService implements TimesheetClientRead.Service {
     private timesheetInfosRead: TimesheetInfosReadService
   ) {}
 
-  configRequest(cookies: TimesheetClientRead.Cookie[]): AxiosRequestConfig {
+  configRequest(cookies: Cookie[]): AxiosRequestConfig {
     const cookie: string = cookies.reduce(
-      (previous, { name, value }) => `${previous} ${name}=${value};`,
+      (previous, { key, value }) => `${previous} ${key}=${value};`,
       ''
     );
 
@@ -41,10 +41,7 @@ export class TimesheetClientReadService implements TimesheetClientRead.Service {
     };
   }
 
-  async loadCookies(
-    login: string,
-    password: string
-  ): Promise<TimesheetClientRead.Cookie[]> {
+  async loadCookies(login: string, password: string): Promise<Cookie[]> {
     try {
       const response = await this.httpService.axiosRef.get(
         timesheetRoutes.accountLogin
@@ -74,13 +71,9 @@ export class TimesheetClientReadService implements TimesheetClientRead.Service {
         }
       );
 
-      const cookieStore: Record<string, TimesheetClientRead.Cookie> =
-        cookieJar.store.idx['luby-timesheet.azurewebsites.net']['/'];
+      const { cookies } = cookieJar.toJSON();
 
-      return Object.entries(cookieStore).map(([name, c]) => ({
-        ...c,
-        name,
-      }));
+      return cookies as Cookie[];
     } catch (e) {
       console.error('Error on load cookies: ', e);
     }
@@ -102,7 +95,7 @@ export class TimesheetClientReadService implements TimesheetClientRead.Service {
 
   async loadCategories(
     projectId: TimesheetClientRead.Project['id'],
-    cookies: TimesheetClientRead.Cookie[]
+    cookies: Cookie[]
   ): Promise<TimesheetClientRead.Category[]> {
     try {
       const { data } = await this.httpService.axiosRef.post<
@@ -123,7 +116,7 @@ export class TimesheetClientReadService implements TimesheetClientRead.Service {
 
   async loadProjects(
     clientId: TimesheetClientRead.Client['id'],
-    cookies: TimesheetClientRead.Cookie[]
+    cookies: Cookie[]
   ): Promise<TimesheetClientRead.Project[]> {
     try {
       const { data } = await this.httpService.axiosRef.post<
@@ -160,9 +153,7 @@ export class TimesheetClientReadService implements TimesheetClientRead.Service {
     }
   }
 
-  async loadClients(
-    cookies: TimesheetClientRead.Cookie[]
-  ): Promise<TimesheetClientRead.Client[]> {
+  async loadClients(cookies: Cookie[]): Promise<TimesheetClientRead.Client[]> {
     const clients: TimesheetClientRead.Client[] = [];
 
     try {
