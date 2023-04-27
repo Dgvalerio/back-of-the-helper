@@ -32,7 +32,9 @@ export class TimesheetInfosReadService implements TimesheetInfosRead.Service {
     });
 
     if (!timesheetInfos) {
-      throw new NotFoundException('Nenhum informação foi encontrada');
+      throw new NotFoundException(
+        'Nenhuma informação do timesheet foi encontrada'
+      );
     }
 
     return timesheetInfosAdapter(timesheetInfos);
