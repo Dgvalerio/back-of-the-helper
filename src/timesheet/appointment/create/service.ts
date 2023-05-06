@@ -8,6 +8,7 @@ import { decryptPassword } from '@/timesheet/infos/utils/decryptPassword';
 
 import { AxiosRequestConfig } from 'axios';
 import { wrapper } from 'axios-cookiejar-support';
+import * as he from 'he';
 import { Cookie, CookieJar } from 'tough-cookie';
 
 @Injectable({ scope: Scope.REQUEST })
@@ -188,7 +189,7 @@ export class TimesheetAppointmentCreateService
           return {
             ...appointment,
             success: !errorResult,
-            errorMessage: errorResult ? errorResult[1] : undefined,
+            errorMessage: errorResult ? he.decode(errorResult[1]) : undefined,
           };
         }
       );
